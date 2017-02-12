@@ -2,17 +2,17 @@
 #include"Board.hpp"
 #include<stack>
 #include<fstream>
+#include<string>
+
 using namespace std;
 Board solve(stack<Board>&);
 
 int main(int argc, char *argv[])
 {
-    if(argc < 2)
-    {
-        cout << "Expected input of the form: [exe] [input]. Where input is 81 ints 0-9" <<endl;
-        exit(1);
-    }
-    const char* file = argv[1];
+	string path;
+	cout << "supply file name: ";
+    cin >> path;
+    const char* file = path.c_string();
     ifstream in(file);
     cin.rdbuf(in.rdbuf());
     
