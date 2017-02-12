@@ -1,5 +1,6 @@
 #include<vector>
 #include<iostream>
+#include<stack>
 using namespace std;
 
 const int totalrc = 9;
@@ -16,20 +17,88 @@ class Board
 {
 public:
   Board(){}
-  void GetPossible(short, bool *);
+  bool PushChildren(stack<Board>);
+  bool GetPossible(short, bool *);
   void PrintBoard();
+  void Set(int row, int col, int val);
 
 private:
   
 };
 
+bool Board::PushChildren(stack<Board> fringe)
+{//pushes the children to the stack, returns false if the board is complete.
+  bool is_complete = true;
+  int least_branch_factor = 999;
+  int least_index = 0;
+  bool possible[totalrc];
+  bool temp[totalrc];
+  for(int i = 0; i < (totalrc * totalrc); i++)
+    {
+      if(GetPossible(i, temp))
+	{
+	  is_complete = false; //the cell is empty
+	  int temp_branch_factor = 0;
+	  for(j = 0; j < totalrc; j++)//find number of possible entries
+	    {
+	      if(temp[j])
+		{
+		  temp_branch_factor++;
+		}
+	    }
+	  if(temp_branch_factor < least_branch_factor)
+	    {
+	      least_branch_factor = temp_branch_factor;
+	      least_index = i;//store the index of the best so far
+	      for(j = 0; j < totalrc; j++)//copy temp into possible
+		{
+		  possible[j] = temp[j];
+		}
+	    }
+	}
+    }
+  if(is_complete)
+    {
+      return false //This is a solution to the sudoku problem
+    }
+  //we have the index and possible from the best next cell
+  short row = cell / totalrc;
+  short col = cell % totalrc;
+  Board * tempBoard;
+  for(int i = 0; i < totalrc; i++)
+    {
+      if(possible[i])
+	{
+	  //make a copy of the Board object
+	  tempBoard = new Board(board);
+	  
+	  //change the designated cell to i
+	  tempBoard.Set(row,col,i);
+	  //need a function to do this ^^^
+	  //push the Board to the stack
+	  fringe.push(tempBoard);
+	  //...make sure I'm not overwriting previous pushed boards
+	  //...figure out if the stack can be a stack of boards, or a stack of pointers to boards
 
+	}
+    }
+  return true; //Wasn't complete, children pushed if present
+}
 
-void Board::GetPossible(short cell, bool *possible )
+void Board::Set(int row, int col, int val)
+{
+  board[row][col] = val;
+}
+
+bool Board::GetPossible(short cell, bool *possible )
 {
   short row = cell / totalrc;
   short col = cell % totalrc;
-  for(int i = 0; i < totalrc; i++)
+  if(board[row][col] > 0)
+    {
+      return false;
+    }
+  for(short i = 0; i < totalrc; i++)
     possible[i] = true;
   
   for(short i = 0; i < totalrc; i++)
@@ -63,7 +132,7 @@ void Board::GetPossible(short cell, bool *possible )
 	    }
 	}
     }
-  return;
+  return true;
 }
   
 void Board::PrintBoard()
