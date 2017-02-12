@@ -8,18 +8,30 @@ const short totalrc = 9;
 class Board
 {
 public:
-  bool PushChildren(stack<Board>);
+  bool PushChildren(stack<Board> &);
   bool GetPossible(short, bool *);
   void PrintBoard();
+  Board&operator = (const Board&rhs);
   void Set(int row, int col, int val);
   Board(short [totalrc][totalrc]);
-  ~Board();
+  ~Board(){}
+  Board(){}
 private:
   short board[totalrc][totalrc];
   
 };
 
-bool Board::PushChildren(stack<Board> fringe)
+
+
+Board& Board::operator = (const Board&rhs)
+{
+  for(int i = 0; i < totalrc; i++)
+    for(int j = 0; j < totalrc; j++)
+      board[i][j] = rhs.board[i][j];
+  return *this;
+}
+
+bool Board::PushChildren(stack<Board> &fringe)
 {//pushes the children to the stack, returns false if the board is complete.
   bool is_complete = true;
   int least_branch_factor = 999;
@@ -32,7 +44,7 @@ bool Board::PushChildren(stack<Board> fringe)
 	{
 	  is_complete = false; //the cell is empty
 	  int temp_branch_factor = 0;
-	  for(j = 0; j < totalrc; j++)//find number of possible entries
+	  for(int j = 0; j < totalrc; j++)//find number of possible entries
 	    {
 	      if(temp[j])
 		{
@@ -43,7 +55,7 @@ bool Board::PushChildren(stack<Board> fringe)
 	    {
 	      least_branch_factor = temp_branch_factor;
 	      least_index = i;//store the index of the best so far
-	      for(j = 0; j < totalrc; j++)//copy temp into possible
+	      for(int j = 0; j < totalrc; j++)//copy temp into possible
 		{
 		  possible[j] = temp[j];
 		}
@@ -52,24 +64,24 @@ bool Board::PushChildren(stack<Board> fringe)
     }
   if(is_complete)
     {
-      return false //This is a solution to the sudoku problem
+      return false; //This is a solution to the sudoku problem
     }
   //we have the index and possible from the best next cell
-  short row = cell / totalrc;
-  short col = cell % totalrc;
-  Board * tempBoard;
+  short row = least_index / totalrc;
+  short col = least_index % totalrc;
+  //Board * tempBoard;
   for(int i = 0; i < totalrc; i++)
     {
       if(possible[i])
 	{
 	  //make a copy of the Board object
-	  tempBoard = new Board(board);
-	  
+	  //tempBoard = new Board(board);
+	  Board b = Board(board);
 	  //change the designated cell to i
-	  tempBoard.Set(row,col,i);
+	  b.Set(row,col,i+1);
 	  //need a function to do this ^^^
 	  //push the Board to the stack
-	  fringe.push(tempBoard);
+	  fringe.push(b);
 	  //...make sure I'm not overwriting previous pushed boards
 	  //...figure out if the stack can be a stack of boards, or a stack of pointers to boards
 
