@@ -2,28 +2,30 @@
 #include<iostream>
 using namespace std;
 
-const int totalrc = 9;
-short board[9][9] = {{0, 0, 0, 0, 0, 0, 2, 0, 0},
-		     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-		     {8, 0, 0, 0, 0, 0, 0, 0, 0},
-		     {0, 0, 0, 0, 0, 0, 8, 5, 0},
-		     {0, 0, 0, 3, 0, 0, 0, 0, 0},
-		     {0, 4, 1, 0, 0, 0, 0, 0, 0},
-		     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-		     {0, 0, 0, 0, 0, 0, 0, 0, 5},
-		     {5, 0, 4, 0, 0, 0, 0, 0, 0}};
+const short totalrc = 9;
+
 class Board
 {
 public:
-  Board(){}
+  Board(short [totalrc][totalrc]);
+  ~Board();
   void GetPossible(short, bool *);
   void PrintBoard();
-
+  
 private:
+  short board[totalrc][totalrc];
   
 };
 
-
+Board::Board(short (input)[totalrc][totalrc])
+{
+  for(short i = 0; i < totalrc; i++)
+    for(short j = 0; j < totalrc; j++)
+      {
+        short x= input[i][j];
+	board[i][j] = x;
+      }
+}
 
 void Board::GetPossible(short cell, bool *possible )
 {
@@ -59,7 +61,7 @@ void Board::GetPossible(short cell, bool *possible )
 	    {
 	      possible[currcell - 1] = 0;
 	      //	      cout << "row: " << row << "col: " << col << endl;
-	      //cout << "curr boxrow: " << boxrow+i << "curr boxcol: " <<boxcol+j << endl;
+	      //cout << "curr boxrow: " << boxrow+i <<"curr boxcol: "<<boxcol+j<<endl;
 	    }
 	}
     }
