@@ -15,7 +15,7 @@ short board[9][9] = {{0, 0, 0, 0, 0, 0, 2, 0, 0},
 class Board
 {
 public:
-  Board();
+  Board(){}
   void GetPossible(short, bool *);
   void PrintBoard();
 
@@ -28,14 +28,15 @@ private:
 void Board::GetPossible(short cell, bool *possible )
 {
   short row = cell / totalrc;
-  short col = row % totalrc;
-  possible = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+  short col = cell % totalrc;
+  for(int i = 0; i < totalrc; i++)
+    possible[i] = true;
   
   for(short i = 0; i < totalrc; i++)
     {
       short currcell = board[i][col];
       if(currcell > 0)
-	  possible[currcell - 1] = 0;
+	possible[currcell - 1] = 0;
     }
 
   for(short i = 0; i < totalrc; i++)
@@ -55,7 +56,11 @@ void Board::GetPossible(short cell, bool *possible )
 	{
 	  short currcell = board[boxrow+i][boxcol+j];
 	  if(currcell > 0)
-	    possible[currcell - 1] = 0;
+	    {
+	      possible[currcell - 1] = 0;
+	      //	      cout << "row: " << row << "col: " << col << endl;
+	      //cout << "curr boxrow: " << boxrow+i << "curr boxcol: " <<boxcol+j << endl;
+	    }
 	}
     }
   return;
@@ -63,15 +68,17 @@ void Board::GetPossible(short cell, bool *possible )
   
 void Board::PrintBoard()
 {
+  cout << "-------------------------------------" << endl;
   for(short i = 0; i < totalrc; i++)
     {
-      cout << "  -  -  -  -  -  -  -  -  -  " << endl;
       cout << "| ";
       for(short j = 0;  j < totalrc; j++)
 	{
 	  cout << board[i][j] << " | ";
+	 
 	}
+      cout << endl;
+      cout << "-------------------------------------" << endl;
     }
-  cout << "  -  -  -  -  -  -  -  -  -  " << endl;
   return;
 }
