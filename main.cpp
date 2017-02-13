@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	string path;
 	cout << "supply file name: ";
     cin >> path;
-    const char* file = path.c_string();
+    const char* file = path.c_str();
     ifstream in(file);
     cin.rdbuf(in.rdbuf());
     

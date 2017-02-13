@@ -11,9 +11,9 @@ int main()
 	{
 	  int chance = rand() % 7;
 	  if(chance != 0)
-	    cout << 0 << endl;
+	    cout << 0 << " ";
 	  else
-	    cout << rand() % 9 + 1 << endl;
+	    cout << rand() % 9 + 1 << " ";
 	  
 	}
       cout << endl;
